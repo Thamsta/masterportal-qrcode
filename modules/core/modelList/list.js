@@ -9,7 +9,7 @@ import Tool from "./tool/model";
 import StaticLink from "./staticlink/model";
 import Legend from "../../legend/model";
 import Filter from "../../tools/filter/model";
-import PrintV2 from "../../tools/print_/model";
+//import PrintV2 from "../../tools/print_/model";
 import Print from "../../tools/print/model";
 import Measure from "../../tools/measure/model";
 import Draw from "../../tools/draw/model";
@@ -132,7 +132,7 @@ const ModelList = Backbone.Collection.extend({
                 if (attrs.version === undefined) {
                     return new Print(_.extend(attrs, {center: Radio.request("MapView", "getCenter"), proxyURL: Config.proxyURL}), options);
                 }
-                return new PrintV2(attrs, options);
+                //return new PrintV2(attrs, options);
             }
             else if (attrs.id === "gfi") {
                 return new GFI(_.extend(attrs, _.has(Config, "gfiWindow") ? {desktopViewType: Config.gfiWindow} : {}), options);
