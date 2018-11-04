@@ -52,6 +52,7 @@ import TreeFilterView from "../modules/treefilter/view";
 import Formular from "../modules/formular/view";
 import FeatureLister from "../modules/featurelister/view";
 import PrintView from "../modules/tools/print_/view";
+import Postit from "../modules/tools/postit/view";
 // @deprecated in version 3.0.0
 // remove "version" in doc and config.
 // rename "print_" to "print"
@@ -255,6 +256,10 @@ function loadApp () {
             }
             case "layerslider": {
                 new LayersliderView({model: tool});
+                break;
+            }
+            case "postit": {
+                new Postit({model: tool});
                 break;
             }
             default: {
