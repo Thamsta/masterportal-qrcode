@@ -1,6 +1,24 @@
 <!DOCTYPE html>
-<select class="form-control input-sm">
-  <option>1</option>
-  <option>2</option>
-  <option>3</option>
-</select>
+<form class="form-horizontal" role="form">
+    <div class="form-group form-group-sm">
+        <label for="titleField" class="col-md-5 col-sm-5 control-label">Titel</label>
+        <div class="col-md-7 col-sm-7">
+          <input type="text" class="form-control" id="title">
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label id="contentLabel" for="contentField" class="col-md-5 col-sm-5 control-label">Inhalt</label>
+        <div class="col-md-7 col-sm-7">
+            <input type="text" class="form-control" id="contentField">
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label id="tagLabel" for="tagField" class="col-md-5 col-sm-5 control-label">Tags</label>
+        <div class="col-md-7 col-sm-7">
+            <input type="text" class="form-control" id="tagField">
+        </div>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary">Speichern</button>
+  </div>
+</form>
