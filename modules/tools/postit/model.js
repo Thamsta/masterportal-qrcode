@@ -25,12 +25,10 @@ const Model = Tool.extend({
     },
 
     createInteraction: function () {
-        this.setProjections(Radio.request("CRS", "getProjections"));
-        this.setMapProjection(Radio.request("MapView", "getProjection"));
         this.setSelectPointerMove(new Pointer({
-            handleMoveEvent: function (evt) {
-                this.checkPosition(evt.coordinate);
-            }.bind(this),
+            // handleMoveEvent: function (evt) {
+            //     this.checkPosition(evt.coordinate);
+            // }.bind(this),
             handleDownEvent: function (evt) {
                 this.positionClicked(evt.coordinate);
             }.bind(this)
@@ -45,32 +43,19 @@ const Model = Tool.extend({
     },
 
     checkPosition: function (position) {
+      console.log(position);
         if (this.get("updatePosition") === true) {
             this.setPositionMapProjection(position);
         }
     },
 
     positionClicked: function (position) {
-        var isViewMobile = Radio.request("Util", "isViewMobile"),
-            updatePosition = isViewMobile ? true : this.get("updatePosition");
-
         this.setPositionMapProjection(position);
-        this.setUpdatePosition(!updatePosition);
-        this.toggleMapMarker(position, updatePosition, isViewMobile);
+        this.updateMapMarker(position);
     },
 
-    /**
-     * Shows the map marker when the coordinate is frozen.
-     * Otherwise, the MapMarker hide
-     * @param {array} position at which was clicked
-     * @param {boolean} updatePosition display of the position is frozen
-     * @param {boolean} isViewMobile is portal in view or desktop version
-     * @returns {void}
-     */
-    toggleMapMarker: function (position, updatePosition, isViewMobile) {
-        var showHideMarker = updatePosition || isViewMobile ? "showMarker" : "hideMarker";
-
-        Radio.trigger("MapMarker", showHideMarker, position);
+    updateMapMarker: function (position){
+      Radio.trigger("MapMarker", "showMarker", position);
     },
 
     returnTransformedPosition: function (targetProjection) {
