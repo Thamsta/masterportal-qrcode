@@ -1,18 +1,18 @@
-import PostitTemplate from "text-loader!./template.html";
-import PostitModel from "./model";
+import PostItTemplate from "text-loader!./template.html";
+import PostItModel from "./model";
 
-const View = Backbone.View.extend({
-    template: _.template(PostitTemplate),
+const PostItView = Backbone.View.extend({
+    template: _.template(PostItTemplate),
     // wird aufgerufen wenn die View erstellt wird
     initialize: function () {
         this.render();
     },
-    id: "postit",
-    model: new PostitModel(),
+    id: "postIt",
+    model: new PostItModel(),
     render: function () {
         $(this.el).html(this.template());
         $("body").append(this.$el);
-      }
-  });
+    }
+});
 
-export default View;
+export default PostItView;
