@@ -34,6 +34,7 @@ import ParcelSearch from "../../tools/parcelSearch/model";
 import StyleWMS from "../../tools/styleWMS/model";
 import LayersliderModel from "../../tools/layerslider/model";
 import GFI from "../../tools/gfi/model";
+import Postit from "../../tools/postit/model"
 
 const ModelList = Backbone.Collection.extend({
     initialize: function () {
@@ -209,6 +210,9 @@ const ModelList = Backbone.Collection.extend({
             }
             else if (attrs.id === "layerslider") {
                 return new LayersliderModel(attrs, options);
+            }
+            else if (attrs.id === "postit") {
+                return new Postit(attrs, options);
             }
             return new Tool(attrs, options);
         }

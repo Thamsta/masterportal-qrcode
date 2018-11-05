@@ -173,6 +173,10 @@
             "name": "Einwohneranzahl abfragen",
             "glyphicon": "glyphicon-wrench"
           },
+          "postit": {
+            "name": "Post-It",
+            "glyphicon": "glyphicon-pencil"
+          },
           "compareFeatures": {
             "name": "Vergleichsliste",
             "glyphicon": "glyphicon-th-list"
