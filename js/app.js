@@ -71,6 +71,7 @@ import MapMarkerView from "../modules/mapMarker/view";
 import SearchbarView from "../modules/searchbar/view";
 import TitleView from "../modules/title/view";
 import HighlightFeature from "../modules/highlightFeature/model";
+import ScaleView from "../modules/scale_cm/view";
 
 var sbconfig, controls, controlsView;
 
@@ -143,7 +144,7 @@ function loadApp () {
     new WindowView();
     // Module laden
     // Tools
-
+    
     new SidebarView();
 
     _.each(Radio.request("ModelList", "getModelsByAttributes", {type: "tool"}), function (tool) {
@@ -347,6 +348,13 @@ function loadApp () {
 
     new HighlightFeature();
     Radio.trigger("Util", "hideLoader");
+
+    //require(["modules/scale_cm/view"], 
+    // function (ScaleView) {
+
+         new ScaleView();
+    //  });
 }
 
 export {loadApp};
+
