@@ -3,20 +3,28 @@ import PostItModel from "./model";
 
 const PostItView = Backbone.View.extend({
     template: _.template(PostItTemplate),
-    // wird aufgerufen wenn die View erstellt wird
+    events: {
+        //input events
+        "keyup #titleField": "titleFieldChanged",
+        "change #contentField": "contentFieldChanged",
+        "change #tagField": "tagFieldChanged",
+        "click #savebutton": "saveclicked"
+    },
     initialize: function () {
+        //listeners on model
         this.listenTo(this.model, {
             "change:isActive change:url": this.render,
-            "click button": this.testcall,
-            "change:positionMapProjection": this.changedPosition
+            "change:positionMapProjection": this.changedPosition,
+            "change:title": this.checkInput,
+            "change:content": this.checkInput,
+            "change:tags": this.checkInput
         });
-        this.testcall();
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
     },
 
     id: "postit",
-    model: new PostitModel(),
+    model: new PostItModel(),
 
     render: function (model, value) {
         if (value) {
@@ -25,6 +33,7 @@ const PostItView = Backbone.View.extend({
             this.$el.html(this.template(model.toJSON()));
             this.changedPosition();
             this.delegateEvents();
+            this.checkInput();
         }
         else {
             this.model.setUpdatePosition(true);
@@ -34,18 +43,18 @@ const PostItView = Backbone.View.extend({
         return this;
       },
 
+    //Called whenever the position in the model has changed
     changedPosition: function () {
         var targetProjectionName = "EPSG:25832",
             position = this.model.returnTransformedPosition(targetProjectionName);
-            //targetProjection = this.model.returnProjectionByName(targetProjectionName);
-
         this.model.setCurrentProjectionName(targetProjectionName);
         if (position) {
             this.adjustPosition(position);
-            //this.adjustWindow(targetProjection);
         }
+        this.checkInput();
     },
 
+    //Sets the coords in the textfield (for debugging purposes. Can be deleted later)
     adjustPosition: function (position) {
         var coord,easting,northing;
         //Kartesische Koordinaten
@@ -57,22 +66,38 @@ const PostItView = Backbone.View.extend({
         this.$("#coordinatesNorthingField").val(northing);
     },
 
-    adjustWindow: function (targetProjection) {
-        // geographische Koordinaten
-        if (targetProjection.projName === "longlat") {
-            this.$("#coordinatesEastingLabel").text("Breite");
-            this.$("#coordinatesNorthingLabel").text("Länge");
-        }
-        // kartesische Koordinaten
-        else {
-            this.$("#coordinatesEastingLabel").text("Rechtswert");
-            this.$("#coordinatesNorthingLabel").text("Hochwert");
-        }
+    /**
+     * Enable the Save button when enough data is set (title, content and coords)
+     */
+    checkInput: function(){
+        let title = this.model.getTitle();
+        let content = this.model.getContent();
+        let coords = this.model.getPositionMapProjection().length > 0;
+        this.$("#savebutton").attr("disabled", !(title && content && coords));
     },
 
+    /**
+     * React to user input
+     */
+    titleFieldChanged: function(){
+        var value = this.$("#titleField").val();
+        this.model.setTitle(value);
+    },
+    contentFieldChanged: function(){
+        var value = this.$("#contentField").val();
+        this.model.setContent(value);
+    },
+    tagFieldChanged: function(){
+        var value = this.$("#tagField").val();
+        this.model.setTags(value);
+    },
+
+    saveclicked: function(){
+        this.model.saveclicked();
+    },
+
+    /*
     testcall: function(){
-        console.log("testcall called");
-        /*
         $.get("http://localhost:8080/get/bier", function(data){
             console.log("success");
         }).fail(function(error){
@@ -89,8 +114,9 @@ const PostItView = Backbone.View.extend({
                 console.log(httperror);
             })
             .always(function() {
-            });  */ 
-      },
+            });
+      },*/
+
   });
 
 export default PostItView;

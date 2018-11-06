@@ -13,7 +13,10 @@ const Model = Tool.extend({
         currentProjectionName: "EPSG:25832",
         deactivateGFI: true,
         renderToWindow: true,
-        glyphicon: "glyphicon-screenshot"
+        position: null,
+        "title": null,
+        "content": null,
+        "tags": []
     }),
     initialize: function () {
         this.superInitialize();
@@ -24,11 +27,9 @@ const Model = Tool.extend({
         });
     },
 
+    //Creates Mouse interaction and binds to function
     createInteraction: function () {
         this.setSelectPointerMove(new Pointer({
-            // handleMoveEvent: function (evt) {
-            //     this.checkPosition(evt.coordinate);
-            // }.bind(this),
             handleDownEvent: function (evt) {
                 this.positionClicked(evt.coordinate);
             }.bind(this)
@@ -37,27 +38,32 @@ const Model = Tool.extend({
         Radio.trigger("Map", "addInteraction", this.get("selectPointerMove"));
     },
 
+    //Removes all mouse interaction
     removeInteraction: function () {
         Radio.trigger("Map", "removeInteraction", this.get("selectPointerMove"));
         this.set("selectPointerMove", null);
     },
 
-    checkPosition: function (position) {
-      console.log(position);
-        if (this.get("updatePosition") === true) {
-            this.setPositionMapProjection(position);
-        }
-    },
-
+    //Triggered by mouse interaction (click)
     positionClicked: function (position) {
         this.setPositionMapProjection(position);
         this.updateMapMarker(position);
     },
 
+    //Updates the position of the map marker to the given position
     updateMapMarker: function (position){
       Radio.trigger("MapMarker", "showMarker", position);
     },
 
+    //Gets called when the save button is clicked.
+    saveclicked: function(){
+        console.log(this.getTitle());
+        console.log(this.getContent());
+        console.log(this.getTags());
+        console.log(this.get("positionMapProjection"));
+    },
+
+    //Transforms and returns the current position to a certain projection (atm always called with EPSG:25832 )
     returnTransformedPosition: function (targetProjection) {
         var positionMapProjection = this.get("positionMapProjection"),
             positionTargetProjection = [0, 0];
@@ -69,20 +75,41 @@ const Model = Tool.extend({
         return positionTargetProjection;
     },
 
-    returnProjectionByName: function (name) {
-        var projections = this.get("projections");
-
-        return _.find(projections, function (projection) {
-            return projection.name === name;
-        });
-    },
-
     getHDMS: function (coord) {
         return toStringHDMS(coord);
     },
 
     getCartesian: function (coord) {
         return toStringXY(coord, 2);
+    },
+
+
+
+    //GETTER&SETTER
+
+    setTitle: function(value){
+        this.set("title", value);
+    },
+
+    getTitle: function(){
+        return this.get("title");
+    },
+
+    setContent: function(value){
+        this.set("content", value);
+    },
+
+    getContent: function(){
+        return this.get("content");
+    },
+
+    //Includes split by ","
+    setTags: function(value){
+        this.set("tags", value.split(","));
+    },
+
+    getTags: function(){
+        return this.get("tags");
     },
 
     // setter for selectPointerMove
@@ -103,6 +130,10 @@ const Model = Tool.extend({
     // setter for positionMapProjection
     setPositionMapProjection: function (value) {
         this.set("positionMapProjection", value);
+    },
+
+    getPositionMapProjection: function(){
+        return this.get("positionMapProjection");
     },
 
     // setter for updatePosition
