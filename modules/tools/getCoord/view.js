@@ -36,6 +36,7 @@ const GetCoord = Backbone.View.extend({
         var targetProjectionName = this.$("#coordSystemField option:selected").val(),
             position = this.model.returnTransformedPosition(targetProjectionName),
             targetProjection = this.model.returnProjectionByName(targetProjectionName);
+            console.log(position, targetProjectionName, targetProjection);
 
         this.model.setCurrentProjectionName(targetProjectionName);
         if (position) {
