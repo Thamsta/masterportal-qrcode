@@ -53,6 +53,7 @@ import Formular from "../modules/formular/view";
 import FeatureLister from "../modules/featurelister/view";
 import PrintView from "../modules/tools/print_/view";
 import PostIt from "../modules/tools/postIt/view";
+import PostItQR from "../modules/tools/postit_qr/view";
 // @deprecated in version 3.0.0
 // remove "version" in doc and config.
 // rename "print_" to "print"
@@ -261,6 +262,10 @@ function loadApp () {
             }
             case "postIt": {
                 new PostIt({model: tool});
+                break;
+            }
+            case "postItQR": {
+                new PostItQR({model: tool});
                 break;
             }
             default: {

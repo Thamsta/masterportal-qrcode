@@ -35,6 +35,7 @@ import StyleWMS from "../../tools/styleWMS/model";
 import LayersliderModel from "../../tools/layerslider/model";
 import GFI from "../../tools/gfi/model";
 import PostIt from "../../tools/postIt/model"
+import PostItQR from "../../tools/postit_qr/model";
 
 const ModelList = Backbone.Collection.extend({
     initialize: function () {
@@ -171,6 +172,9 @@ const ModelList = Backbone.Collection.extend({
             }
             else if (attrs.id === "postIt") {
                 return new PostIt(attrs, options);
+            }
+            else if (attrs.id === "postItQR") {
+                return new PostItQR(attrs, options);
             }
             else if (attrs.id === "searchByCoord") {
                 return new SearchByCoord(attrs, options);
