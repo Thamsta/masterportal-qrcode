@@ -177,6 +177,10 @@
             "name": "Post-It",
             "glyphicon": "glyphicon-pushpin"
           },
+          "postItQR": {
+            "name": "Post-It-QR",
+            "glyphicon": "glyphicon-pushpin"
+          },
           "compareFeatures": {
             "name": "Vergleichsliste",
             "glyphicon": "glyphicon-th-list"

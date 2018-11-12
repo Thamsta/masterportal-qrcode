@@ -53,6 +53,7 @@ import Formular from "../modules/formular/view";
 import FeatureLister from "../modules/featurelister/view";
 import PrintView from "../modules/tools/print_/view";
 import PostIt from "../modules/tools/postIt/view";
+import PostItQR from "../modules/tools/postit_qr/view";
 // @deprecated in version 3.0.0
 // remove "version" in doc and config.
 // rename "print_" to "print"
@@ -72,6 +73,7 @@ import MapMarkerView from "../modules/mapMarker/view";
 import SearchbarView from "../modules/searchbar/view";
 import TitleView from "../modules/title/view";
 import HighlightFeature from "../modules/highlightFeature/model";
+//import ScaleView from "../modules/scale_cm/view";
 
 var sbconfig, controls, controlsView;
 
@@ -144,7 +146,7 @@ function loadApp () {
     new WindowView();
     // Module laden
     // Tools
-
+    
     new SidebarView();
 
     _.each(Radio.request("ModelList", "getModelsByAttributes", {type: "tool"}), function (tool) {
@@ -262,6 +264,10 @@ function loadApp () {
                 new PostIt({model: tool});
                 break;
             }
+            case "postItQR": {
+                new PostItQR({model: tool});
+                break;
+            }
             default: {
                 break;
             }
@@ -352,6 +358,13 @@ function loadApp () {
 
     new HighlightFeature();
     Radio.trigger("Util", "hideLoader");
+
+    //require(["modules/scale_cm/view"], 
+    // function (ScaleView) {
+
+       //  new ScaleView();
+    //  });
 }
 
 export {loadApp};
+

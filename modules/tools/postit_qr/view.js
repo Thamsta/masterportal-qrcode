@@ -1,13 +1,10 @@
-import PostItTemplate from "text-loader!./template.html";
-import PostItModel from "./model";
+import PostItQRTemplate from "text-loader!./template.html";
+import PostItQRModel from "./model";
 
-const PostItView = Backbone.View.extend({
-    template: _.template(PostItTemplate),
+const PostItQRView = Backbone.View.extend({
+    template: _.template(PostItQRTemplate),
     events: {
         //input events
-        "keyup #titleField": "titleFieldChanged",
-        "change #contentField": "contentFieldChanged",
-        "change #tagField": "tagFieldChanged",
         "click #savebutton": "saveclicked"
     },
     initialize: function () {
@@ -15,16 +12,13 @@ const PostItView = Backbone.View.extend({
         this.listenTo(this.model, {
             "change:isActive change:url": this.render,
             "change:positionMapProjection": this.changedPosition,
-            "change:title": this.checkInput,
-            "change:content": this.checkInput,
-            "change:tags": this.checkInput
         });
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
     },
 
-    id: "postIt",
-    model: new PostItModel(),
+    id: "postItQR",
+    model: new PostItQRModel(),
 
     render: function (model, value) {
         if (value) {
@@ -53,7 +47,7 @@ const PostItView = Backbone.View.extend({
         }
         this.checkInput();
     },
-
+    
     //Sets the coords in the textfield (for debugging purposes. Can be deleted later)
     adjustPosition: function (position) {
         var coord,easting,northing;
@@ -70,53 +64,17 @@ const PostItView = Backbone.View.extend({
      * Enable the Save button when enough data is set (title, content and coords)
      */
     checkInput: function(){
-        let title = this.model.getTitle();
-        let content = this.model.getContent();
-        let coords = this.model.getPositionMapProjection().length > 0;
-        this.$("#savebutton").attr("disabled", !(title && content && coords));
+       let coords = this.model.getPositionMapProjection().length > 0;
+        this.$("#savebutton").attr("disabled", !(coords));
     },
 
     /**
      * React to user input
      */
-    titleFieldChanged: function(){
-        var value = this.$("#titleField").val();
-        this.model.setTitle(value);
-    },
-    contentFieldChanged: function(){
-        var value = this.$("#contentField").val();
-        this.model.setContent(value);
-    },
-    tagFieldChanged: function(){
-        var value = this.$("#tagField").val();
-        this.model.setTags(value);
-    },
 
     saveclicked: function(){
         this.model.saveclicked();
     },
-
-    /*
-    testcall: function(){
-        $.get("http://localhost:8080/get/bier", function(data){
-            console.log("success");
-        }).fail(function(error){
-            console.log("error");
-            console.log(error);
-        })
-        var request = $.ajax("http://localhost:8080/get/bier")
-            .done(function() {
-                console.log("success");
-            })
-            .fail(function(jq,textStatus,httperror) {
-                console.log(jq);
-                console.log(textStatus);
-                console.log(httperror);
-            })
-            .always(function() {
-            });
-      },*/
-
   });
 
-export default PostItView;
+export default PostItQRView;
