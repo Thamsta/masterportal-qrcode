@@ -5,7 +5,7 @@ const PostItView = Backbone.View.extend({
     template: _.template(PostItTemplate),
     events: {
         //input events
-        "keyup #titleField": "titleFieldChanged",
+        "change #titleField": "titleFieldChanged",
         "change #contentField": "contentFieldChanged",
         "change #tagField": "tagFieldChanged",
         "click #savebutton": "saveclicked"
@@ -15,9 +15,7 @@ const PostItView = Backbone.View.extend({
         this.listenTo(this.model, {
             "change:isActive change:url": this.render,
             "change:positionMapProjection": this.changedPosition,
-            "change:title": this.checkInput,
-            "change:content": this.checkInput,
-            "change:tags": this.checkInput
+            "change:title change:content change:tags": this.checkInput,
         });
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
@@ -95,28 +93,6 @@ const PostItView = Backbone.View.extend({
     saveclicked: function(){
         this.model.saveclicked();
     },
-
-    /*
-    testcall: function(){
-        $.get("http://localhost:8080/get/bier", function(data){
-            console.log("success");
-        }).fail(function(error){
-            console.log("error");
-            console.log(error);
-        })
-        var request = $.ajax("http://localhost:8080/get/bier")
-            .done(function() {
-                console.log("success");
-            })
-            .fail(function(jq,textStatus,httperror) {
-                console.log(jq);
-                console.log(textStatus);
-                console.log(httperror);
-            })
-            .always(function() {
-            });
-      },*/
-
   });
 
 export default PostItView;

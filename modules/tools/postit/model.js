@@ -5,6 +5,9 @@ import {toStringHDMS, toStringXY} from "ol/coordinate.js";
 
 const Model = Tool.extend({
     defaults: _.extend({}, Tool.prototype.defaults, {
+        allPostits: [{title: "Titel1", content: "Inhalt1", tags: ["Tag1-1,Tag1-2"], coordinates: [558069.4486424976, 5932206.484108498]},
+        {title: "Titel2", content: "Inhalt2", tags: ["Tag2-1", "Tag2-2"], coordinates: [558609.1983510328, 5933508.233405553]},
+        {title: "Titel3", content: "Inhalt3", tags: ["Tag3-1"], coordinates: [559529.947853828, 5933444.733439844]}],
         selectPointerMove: null,
         projections: [],
         mapProjection: null,
@@ -16,7 +19,7 @@ const Model = Tool.extend({
         position: null,
         "title": null,
         "content": null,
-        "tags": []
+        "tags": [],
     }),
     initialize: function () {
         this.superInitialize();
@@ -57,10 +60,9 @@ const Model = Tool.extend({
 
     //Gets called when the save button is clicked.
     saveclicked: function(){
-        console.log(this.getTitle());
-        console.log(this.getContent());
-        console.log(this.getTags());
-        console.log(this.get("positionMapProjection"));
+        var postit = {title:this.getTitle(), content:this.getContent(), tags:this.getTags(), 
+                        coordinates: this.get("positionMapProjection")};
+        this.addPostit(postit);
     },
 
     //Transforms and returns the current position to a certain projection (atm always called with EPSG:25832 )
@@ -84,6 +86,9 @@ const Model = Tool.extend({
     },
 
 
+    addPostit: function(value){
+        this.get("allPostits").push(value);
+    },
 
     //GETTER&SETTER
 
