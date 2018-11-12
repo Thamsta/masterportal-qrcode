@@ -93,28 +93,6 @@ const PostItView = Backbone.View.extend({
     saveclicked: function(){
         this.model.saveclicked();
     },
-
-    /*
-    testcall: function(){
-        $.get("http://localhost:8080/get/bier", function(data){
-            console.log("success");
-        }).fail(function(error){
-            console.log("error");
-            console.log(error);
-        })
-        var request = $.ajax("http://localhost:8080/get/bier")
-            .done(function() {
-                console.log("success");
-            })
-            .fail(function(jq,textStatus,httperror) {
-                console.log(jq);
-                console.log(textStatus);
-                console.log(httperror);
-            })
-            .always(function() {
-            });
-      },*/
-
   });
 
 export default PostItView;
