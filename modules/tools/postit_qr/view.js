@@ -1,13 +1,10 @@
-import PostItTemplate from "text-loader!./template.html";
-import PostItModel from "./model";
+import PostItQRTemplate from "text-loader!./template.html";
+import PostItQRModel from "./model";
 
-const PostItView = Backbone.View.extend({
-    template: _.template(PostItTemplate),
+const PostItQRView = Backbone.View.extend({
+    template: _.template(PostItQRTemplate),
     events: {
         //input events
-        "change #titleField": "titleFieldChanged",
-        "change #contentField": "contentFieldChanged",
-        "change #tagField": "tagFieldChanged",
         "click #savebutton": "saveclicked"
     },
     initialize: function () {
@@ -15,14 +12,13 @@ const PostItView = Backbone.View.extend({
         this.listenTo(this.model, {
             "change:isActive change:url": this.render,
             "change:positionMapProjection": this.changedPosition,
-            "change:title change:content change:tags": this.checkInput,
         });
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
     },
 
-    id: "postIt",
-    model: new PostItModel(),
+    id: "postItQR",
+    model: new PostItQRModel(),
 
     render: function (model, value) {
         if (value) {
@@ -51,7 +47,7 @@ const PostItView = Backbone.View.extend({
         }
         this.checkInput();
     },
-
+    
     //Sets the coords in the textfield (for debugging purposes. Can be deleted later)
     adjustPosition: function (position) {
         var coord,easting,northing;
@@ -68,31 +64,24 @@ const PostItView = Backbone.View.extend({
      * Enable the Save button when enough data is set (title, content and coords)
      */
     checkInput: function(){
-        let title = this.model.getTitle();
-        let content = this.model.getContent();
-        let coords = this.model.getPositionMapProjection().length > 0;
-        this.$("#savebutton").attr("disabled", !(title && content && coords));
+       let coords = this.model.getPositionMapProjection().length > 0;
+        this.$("#savebutton").attr("disabled", !(coords));
     },
 
     /**
      * React to user input
      */
-    titleFieldChanged: function(){
-        var value = this.$("#titleField").val();
-        this.model.setTitle(value);
-    },
-    contentFieldChanged: function(){
-        var value = this.$("#contentField").val();
-        this.model.setContent(value);
-    },
-    tagFieldChanged: function(){
-        var value = this.$("#tagField").val();
-        this.model.setTags(value);
-    },
 
     saveclicked: function(){
+        var QRCode = require("qrcode")
+        var canvas = document.getElementById("QRplaceHolder")
+        var text = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split(",")
+        QRCode.toCanvas(canvas, text, function (error) {
+            if (error) console.error(error)
+            console.log('success!');
+        })
         this.model.saveclicked();
     },
   });
 
-export default PostItView;
+export default PostItQRView;
