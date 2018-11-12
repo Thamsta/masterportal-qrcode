@@ -14,9 +14,6 @@ const Model = Tool.extend({
         deactivateGFI: true,
         renderToWindow: true,
         position: null,
-        "title": null,
-        "content": null,
-        "tags": []
     }),
     initialize: function () {
         this.superInitialize();
@@ -57,13 +54,9 @@ const Model = Tool.extend({
 
     //Gets called when the save button is clicked.
     saveclicked: function () {
-        //  console.log(this.getTitle());
-        //  console.log(this.getContent());
-        //  console.log(this.getTags());
         console.log(this.getPositionMapProjection());
         var QRCode = require("qrcode")
         var canvas = document.getElementById("QRplaceHolder")
-        //console.log(this.getPositionMapProjection());
         var text = this.getCartesian(this.returnTransformedPosition("EPSG:25832")).split(",")
         QRCode.toCanvas(canvas, text, function (error) {
             if (error) console.error(error)
@@ -91,34 +84,7 @@ const Model = Tool.extend({
         return toStringXY(coord, 2);
     },
 
-
-
     //GETTER&SETTER
-
-    setTitle: function (value) {
-        this.set("title", value);
-    },
-
-    getTitle: function () {
-        return this.get("title");
-    },
-
-    setContent: function (value) {
-        this.set("content", value);
-    },
-
-    getContent: function () {
-        return this.get("content");
-    },
-
-    //Includes split by ","
-    setTags: function (value) {
-        this.set("tags", value.split(","));
-    },
-
-    getTags: function () {
-        return this.get("tags");
-    },
 
     // setter for selectPointerMove
     setSelectPointerMove: function (value) {
