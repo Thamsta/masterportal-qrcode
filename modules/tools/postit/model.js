@@ -16,7 +16,8 @@ const Model = Tool.extend({
         position: null,
         "title": null,
         "content": null,
-        "tags": []
+        "tags": [],
+        allPostits: []
     }),
     initialize: function () {
         this.superInitialize();
@@ -57,10 +58,9 @@ const Model = Tool.extend({
 
     //Gets called when the save button is clicked.
     saveclicked: function(){
-        console.log(this.getTitle());
-        console.log(this.getContent());
-        console.log(this.getTags());
-        console.log(this.get("positionMapProjection"));
+        var postit = {title:this.getTitle(), content:this.getContent(), tags:this.getTags(), 
+                        coordinates: this.get("positionMapProjection")};
+        allPostits.push(postit)
     },
 
     //Transforms and returns the current position to a certain projection (atm always called with EPSG:25832 )

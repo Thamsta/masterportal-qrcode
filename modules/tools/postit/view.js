@@ -5,7 +5,7 @@ const PostItView = Backbone.View.extend({
     template: _.template(PostItTemplate),
     events: {
         //input events
-        "keyup #titleField": "titleFieldChanged",
+        "change #titleField": "titleFieldChanged",
         "change #contentField": "contentFieldChanged",
         "change #tagField": "tagFieldChanged",
         "click #savebutton": "saveclicked"
@@ -15,9 +15,7 @@ const PostItView = Backbone.View.extend({
         this.listenTo(this.model, {
             "change:isActive change:url": this.render,
             "change:positionMapProjection": this.changedPosition,
-            "change:title": this.checkInput,
-            "change:content": this.checkInput,
-            "change:tags": this.checkInput
+            "change:title change:content change:tags": this.checkInput,
         });
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
