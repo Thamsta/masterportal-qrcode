@@ -1,9 +1,0 @@
-#scale {
-    position: absolute;
-    bottom: 180px;
-    left: 10px;
-    border: 9px solid rgb(182, 0, 0);
-}
-#scale  select {
-    padding: 6px 12px;
-}
