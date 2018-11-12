@@ -2,7 +2,6 @@ import Tool from "../../core/modelList/tool/model";
 import { Pointer } from "ol/interaction.js";
 import { toStringHDMS, toStringXY } from "ol/coordinate.js";
 
-
 const Model = Tool.extend({
     defaults: _.extend({}, Tool.prototype.defaults, {
         selectPointerMove: null,
@@ -55,13 +54,16 @@ const Model = Tool.extend({
     //Gets called when the save button is clicked.
     saveclicked: function () {
         console.log(this.getPositionMapProjection());
-        var QRCode = require("qrcode")
-        var canvas = document.getElementById("QRplaceHolder")
-        var text = this.getCartesian(this.returnTransformedPosition("EPSG:25832")).split(",")
-        QRCode.toCanvas(canvas, text, function (error) {
-            if (error) console.error(error)
-            console.log('success!');
-        })
+        // Hier muss eine URL von der Datenbank kommen 
+
+        // Alles in VIEW ausgelagert
+        // var QRCode = require("qrcode")
+        // var canvas = document.getElementById("QRplaceHolder")
+        // var text = this.getCartesian(this.returnTransformedPosition("EPSG:25832")).split(",")
+        // QRCode.toCanvas(canvas, text, function (error) {
+        //     if (error) console.error(error)
+        //     console.log('success!');
+        // })
     },
 
     //Transforms and returns the current position to a certain projection (atm always called with EPSG:25832 )

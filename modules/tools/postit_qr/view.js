@@ -73,6 +73,13 @@ const PostItQRView = Backbone.View.extend({
      */
 
     saveclicked: function(){
+        var QRCode = require("qrcode")
+        var canvas = document.getElementById("QRplaceHolder")
+        var text = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split(",")
+        QRCode.toCanvas(canvas, text, function (error) {
+            if (error) console.error(error)
+            console.log('success!');
+        })
         this.model.saveclicked();
     },
   });
