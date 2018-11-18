@@ -17,10 +17,43 @@ const PostItView = Backbone.View.extend({
             "change:positionMapProjection": this.changedPosition,
             "change:title change:content change:tags": this.checkInput,
         });
+        this.basicPOSTCall();
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
     },
 
+    //Grundlegender Aufbau einer Funktion welche alle verfügbaren Post-Its vom Server erhält
+    //Die erhaltenen Objekte müssen noch als JSON dekodiert werden.
+    basicGETCall: function() {
+        $.ajax({
+            url: "https://localhost:8443/postit/all",
+            //data: params,
+            async: true,
+            type: "GET",
+            context: this,
+            success: function (data) {
+                console.log(data);
+            },
+        });
+    },
+    //Grundlegender Aufbau einer Funktion welche ein neues Post-It an den Server schickt.
+    //Das erhaltenen Objekte müssen noch als JSON dekodiert werden.
+    basicPOSTCall: function(){
+        let postit = {title: "title", content: "content", tags: ["tag1","tag2"], coords: [50,5,50,4]};
+        $.ajax({
+            url: "https://localhost:8443/postit/add",
+            data: postit,
+            async: true,
+            type: "POST",
+            cache: false,
+            dataType: "json",
+            context: this,
+            success: function (data) {
+                console.log(data);
+                this.basicGETCall();
+            }
+        });
+    },
     id: "postIt",
     model: new PostItModel(),
 
