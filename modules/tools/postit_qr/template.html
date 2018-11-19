@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<form class="form-horizontal" role="form">
+<form class="form-horizontal" role="form" id="QR_Window">
+    <!--
     <div class="form-group form-group-sm">
         <label id="contentLabel" for="contentField" class="col-md-5 col-sm-5 control-label">Koordinate 1</label>
         <input type="text" class="form-control" id="coordinatesNorthingField" readonly contenteditable="true">
@@ -9,8 +10,10 @@
     <div class="btn-group">
         <button type="button" id="savebutton" class="btn btn-panel-submit">Erstelle QR-Code</button>
     </div>
+    -->
     <div class="form-group">
-        <canvas id="QRplaceHolder">Canvas</canvas>
+            <label id="QRplaceHolderLabel" for="QRplaceHolder" class="col-md-5 col-sm-5 control-label">Klicken Sie auf die Karte</label>
+            <canvas id="QRplaceHolder">Canvas</canvas>
     </div>
      </div>
 </form>

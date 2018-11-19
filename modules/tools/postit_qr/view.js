@@ -3,18 +3,19 @@ import PostItQRModel from "./model";
 
 const PostItQRView = Backbone.View.extend({
     template: _.template(PostItQRTemplate),
-    events: {
-        //input events
-        "click #savebutton": "saveclicked"
-    },
+
     initialize: function () {
         //listeners on model
         this.listenTo(this.model, {
-            "change:isActive change:url": this.render,
-            "change:positionMapProjection": this.changedPosition,
+            "change:isActive": this.render,
+          //  "change:url": this.render,
+            "change:positionMapProjection": this.changedPosition, 
+            "change:positionMapProjection": this.createQR, 
         });
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
+        
+        
     },
 
     id: "postItQR",
@@ -28,12 +29,17 @@ const PostItQRView = Backbone.View.extend({
             this.changedPosition();
             this.delegateEvents();
             this.checkInput();
+            this.showQR();
         }
         else {
             this.model.setUpdatePosition(true);
             this.model.removeInteraction();
             this.undelegateEvents();
         }
+
+        var channel = Radio.channel("MapMarker");
+        var markerPosition = channel.trigger('showMarker');
+        console.log(markerPosition);
         return this;
       },
 
@@ -81,6 +87,28 @@ const PostItQRView = Backbone.View.extend({
             console.log('success!');
         })
         this.model.saveclicked();
+    },
+    createQR: function(){
+        var QRCode = require("qrcode")
+        var canvas = document.getElementById("QRplaceHolder")
+        document.getElementById("QRplaceHolderLabel").innerHTML = "Scannen Sie den QR-Code mit Ihrem Endgerät";
+
+        //$('QRplaceHolderLabel').remove();
+        //document.getElementById("QRplaceHolderLabel").fillText("Hello World",10,50);
+        var text = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split(",")
+        QRCode.toCanvas(canvas, text, function (error) {
+            if (error) console.error(error)
+            console.log('success!');
+        })
+       // this.setElement(document.getElementsByClassName("win-body")[10]);
+       // window.adjustPosition("top: 414px; left: 262px");
+    },
+    showQR: function () {
+        document.getElementById("QR_Window").setPosition("position: absolute; left: 463px; bottom: 533px;")
+        //this.clearMarker();
+        //this.model.get("marker").setPosition(coordinate);
+        //this.$el.show();
+        //this.model.get("polygon").setVisible(true);
     },
   });
 
