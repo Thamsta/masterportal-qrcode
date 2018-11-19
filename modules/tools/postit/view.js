@@ -26,7 +26,7 @@ const PostItView = Backbone.View.extend({
     //Die erhaltenen Objekte müssen noch als JSON dekodiert werden.
     basicGETCall: function() {
         $.ajax({
-            url: "https://localhost:8443/postit/all",
+            url: "https://thawing-brushlands-15739.herokuapp.com/postit/all",
             //data: params,
             async: true,
             type: "GET",
@@ -41,7 +41,7 @@ const PostItView = Backbone.View.extend({
     basicPOSTCall: function(){
         let postit = {title: "title", content: "content", tags: ["tag1","tag2"], coords: [50,5,50,4]};
         $.ajax({
-            url: "https://localhost:8443/postit/add",
+            url: "https://thawing-brushlands-15739.herokuapp.com/postit/add",
             data: postit,
             async: true,
             type: "POST",
