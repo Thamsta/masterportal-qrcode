@@ -29,7 +29,12 @@ const PostItQRView = Backbone.View.extend({
             this.changedPosition();
             this.delegateEvents();
             this.checkInput();
-            this.showQR();
+            var domElement = document.getElementById('QR_Window');// don't go to to DOM every time you need it. Instead store in a variable and manipulate.
+            domElement.style.position = "absolute";
+            domElement.style.top = 400 + "px"; //or whatever 
+            domElement.style.left = 200 + "px";
+            console.log(this.model.position);
+
         }
         else {
             this.model.setUpdatePosition(true);
@@ -37,10 +42,7 @@ const PostItQRView = Backbone.View.extend({
             this.undelegateEvents();
         }
 
-        var channel = Radio.channel("MapMarker");
-        var markerPosition = channel.trigger('showMarker');
-        console.log(markerPosition);
-        return this;
+        
       },
 
     //Called whenever the position in the model has changed
@@ -102,13 +104,6 @@ const PostItQRView = Backbone.View.extend({
         })
        // this.setElement(document.getElementsByClassName("win-body")[10]);
        // window.adjustPosition("top: 414px; left: 262px");
-    },
-    showQR: function () {
-        document.getElementById("QR_Window").setPosition("position: absolute; left: 463px; bottom: 533px;")
-        //this.clearMarker();
-        //this.model.get("marker").setPosition(coordinate);
-        //this.$el.show();
-        //this.model.get("polygon").setVisible(true);
     },
   });
 
