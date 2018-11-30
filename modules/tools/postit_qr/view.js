@@ -29,12 +29,6 @@ const PostItQRView = Backbone.View.extend({
             this.changedPosition();
             this.delegateEvents();
             this.checkInput();
-            var domElement = document.getElementById('QR_Window');// don't go to to DOM every time you need it. Instead store in a variable and manipulate.
-            domElement.style.position = "absolute";
-            domElement.style.top = 400 + "px"; //or whatever 
-            domElement.style.left = 200 + "px";
-            console.log(this.model.position);
-
         }
         else {
             this.model.setUpdatePosition(true);
@@ -97,8 +91,11 @@ const PostItQRView = Backbone.View.extend({
 
         //$('QRplaceHolderLabel').remove();
         //document.getElementById("QRplaceHolderLabel").fillText("Hello World",10,50);
-        var text = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split(",")
-        QRCode.toCanvas(canvas, text, function (error) {
+        //var text = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split(",")
+        var text2 = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split("&easting=")
+        //console.log(text2)
+        var text3 = "https://thawing-brushlands-15739.herokuapp.com/new.html?northing=" + text2
+        QRCode.toCanvas(canvas, text3, function (error) {
             if (error) console.error(error)
             console.log('success!');
         })
