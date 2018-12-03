@@ -3,18 +3,19 @@ import PostItQRModel from "./model";
 
 const PostItQRView = Backbone.View.extend({
     template: _.template(PostItQRTemplate),
-    events: {
-        //input events
-        "click #savebutton": "saveclicked"
-    },
+
     initialize: function () {
         //listeners on model
         this.listenTo(this.model, {
-            "change:isActive change:url": this.render,
-            "change:positionMapProjection": this.changedPosition,
+            "change:isActive": this.render,
+          //  "change:url": this.render,
+            "change:positionMapProjection": this.changedPosition, 
+            "change:positionMapProjection": this.createQR, 
         });
         // Bestätige, dass das Modul geladen wurde
         Radio.trigger("Autostart", "initializedModul", this.model.get("id"));
+        
+        
     },
 
     id: "postItQR",
@@ -34,7 +35,8 @@ const PostItQRView = Backbone.View.extend({
             this.model.removeInteraction();
             this.undelegateEvents();
         }
-        return this;
+
+        
       },
 
     //Called whenever the position in the model has changed
@@ -81,6 +83,24 @@ const PostItQRView = Backbone.View.extend({
             console.log('success!');
         })
         this.model.saveclicked();
+    },
+    createQR: function(){
+        var QRCode = require("qrcode")
+        var canvas = document.getElementById("QRplaceHolder")
+        document.getElementById("QRplaceHolderLabel").innerHTML = "Scannen Sie den QR-Code mit Ihrem Endgerät";
+
+        //$('QRplaceHolderLabel').remove();
+        //document.getElementById("QRplaceHolderLabel").fillText("Hello World",10,50);
+        //var text = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split(",")
+        var text2 = this.model.getCartesian(this.model.returnTransformedPosition("EPSG:25832")).split("&easting=")
+        //console.log(text2)
+        var text3 = "https://thawing-brushlands-15739.herokuapp.com/new.html?northing=" + text2
+        QRCode.toCanvas(canvas, text3, function (error) {
+            if (error) console.error(error)
+            console.log('success!');
+        })
+       // this.setElement(document.getElementsByClassName("win-body")[10]);
+       // window.adjustPosition("top: 414px; left: 262px");
     },
   });
 
