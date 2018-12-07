@@ -5,7 +5,12 @@ const PostItQRView = Backbone.View.extend({
     template: _.template(PostItQRTemplate),
     id: "postItQR",
     model: new PostItQRModel(),
-
+    events: {
+        //input events
+        "click #listPostitsButton": "listPostits",
+        "click #newPostitButton": "newPostit"
+    },
+    
     initialize: function () {
         //listeners on model
         this.listenTo(this.model, {
