@@ -52,6 +52,9 @@ const ThemeList = Backbone.Collection.extend({
         else if (attrs.gfiTheme === "trinkwasser") {
             theme = new TrinkwasserTheme(attrs, options);
         }
+        else if (attrs.gfiTheme === "qr-code") {
+            theme = new TrinkwasserTheme(attrs, options);
+        }
         else if (attrs.gfiTheme === "mietenspiegel") {
             theme = new MietenspiegelTheme(attrs, options);
         }
@@ -137,6 +140,10 @@ const ThemeList = Backbone.Collection.extend({
                 break;
             }
             case "trinkwasser": {
+                new TrinkwasserThemeView({model: model});
+                break;
+            }
+            case "qr-code": {
                 new TrinkwasserThemeView({model: model});
                 break;
             }

@@ -7,8 +7,8 @@ const PostItQRView = Backbone.View.extend({
     model: new PostItQRModel(),
     events: {
         //input events
-        "click #listPostitsButton": "listPostits",
-        "click #newPostitButton": "newPostit"
+        "click #deletePostitsButton": "hideQrMarker",
+        // "click #newPostitButton": "newPostit"
     },
     
     initialize: function () {
@@ -24,9 +24,11 @@ const PostItQRView = Backbone.View.extend({
 
     render: function (model, value) {
         if (value) {
+            this.setElement(document.getElementsByClassName("win-body")[0]);
             this.$el.html(this.template(model.toJSON()));
             this.delegateEvents();
             this.model.createInteraction();
+            document.getElementById("popup-content").style.visibility = "hidden";
         }
         else {
             this.hideQrMarker();
@@ -42,7 +44,8 @@ const PostItQRView = Backbone.View.extend({
     createQR: function () {
         var position = this.model.returnTransformedPosition(this.model.getCurrentProjectionName());
         var content = document.getElementById('popup-content');
-        
+        content.style.visibility = "visible";
+
         document.getElementById("QRplaceHolderLabel").innerHTML = "Scannen Sie den QR-Code mit Ihrem Endgerät.";
         document.getElementById('image').src = this.model.getqrBild();
         this.model.get("qrOverlay").set("element", content);
@@ -51,14 +54,20 @@ const PostItQRView = Backbone.View.extend({
     },
 
     showQrMarker: function (coordinate) {
-        this.model.get("qrOverlay").setPosition(coordinate);
         this.$el.show();
+        this.model.get("qrOverlay").setPosition(coordinate);
     },
 
     hideQrMarker: function () {
-        this.$el.hide();
+        // this.$el.hide();
+        document.getElementById("popup-content").style.visibility = "hidden";
+
         this.model.get("qrOverlay").setPosition(undefined);
     },
+
+    deletePostits: function () {
+        this.model.set("isActive", false);
+    }
 });
 
 export default PostItQRView;
