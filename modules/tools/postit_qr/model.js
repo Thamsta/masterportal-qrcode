@@ -1,25 +1,35 @@
 import Tool from "../../core/modelList/tool/model";
 import { Pointer } from "ol/interaction.js";
 import { toStringHDMS, toStringXY } from "ol/coordinate.js";
+import Overlay from "ol/Overlay.js";
+
 
 const Model = Tool.extend({
     defaults: _.extend({}, Tool.prototype.defaults, {
         selectPointerMove: null,
-        projections: [],
-        mapProjection: null,
         positionMapProjection: [],
-        updatePosition: true,
         currentProjectionName: "EPSG:25832",
-        deactivateGFI: true,
-        renderToWindow: true,
-        position: null,
+
+        qrBild: undefined,
+        qrOverlay: new Overlay({
+            position: undefined,
+            stopEvent: false,
+            element: undefined,
+            autoPan: true,
+            autoPanAnimation: {
+                duration: 250
+            },
+        }),
+        // qrArray: [],
+
+
     }),
     initialize: function () {
         this.superInitialize();
         this.listenTo(this, {
             "change:isActive": function () {
                 Radio.trigger("MapMarker", "hideMarker");
-            }
+            },
         });
     },
 
@@ -42,28 +52,27 @@ const Model = Tool.extend({
 
     //Triggered by mouse interaction (click)
     positionClicked: function (position) {
+        var that = this;
+        var coord = this.getCartesian(position).split(", ");
+        var easting = coord[0];
+        var northing = coord[1];
+        var QRCode = require("qrcode");
+        var text = "https://thawing-brushlands-15739.herokuapp.com/new.html?northing=" + northing + "&easting=" + easting;
+        var opts = {
+            errorCorrectionLevel: 'H',
+            type: 'image/png',
+            rendererOpts: {
+                quality: 0.3
+            }
+        };
+
+        console.log(text);
+        QRCode.toDataURL(text, opts, function (err, url) {
+            if (err) throw err
+            that.setqrBild(url);
+        });
+        Radio.trigger("Map", "addOverlay", this.get("qrOverlay"));
         this.setPositionMapProjection(position);
-        this.updateMapMarker(position);
-    },
-
-    //Updates the position of the map marker to the given position
-    updateMapMarker: function (position) {
-        Radio.trigger("MapMarker", "showMarker", position);
-    },
-
-    //Gets called when the save button is clicked.
-    saveclicked: function () {
-        console.log(this.getPositionMapProjection());
-        // Hier muss eine URL von der Datenbank kommen 
-
-        // Alles in VIEW ausgelagert
-        // var QRCode = require("qrcode")
-        // var canvas = document.getElementById("QRplaceHolder")
-        // var text = this.getCartesian(this.returnTransformedPosition("EPSG:25832")).split(",")
-        // QRCode.toCanvas(canvas, text, function (error) {
-        //     if (error) console.error(error)
-        //     console.log('success!');
-        // })
     },
 
     //Transforms and returns the current position to a certain projection (atm always called with EPSG:25832 )
@@ -88,19 +97,24 @@ const Model = Tool.extend({
 
     //GETTER&SETTER
 
+    // setter for qrBild
+    setqrBild: function (value) {
+        this.set("qrBild", value);
+    },
+
+    // getter for qrBild
+    getqrBild: function () {
+        return this.get("qrBild");
+    },
+
+    // setter for qrOverlay
+    setqrOverlay: function (value) {
+        this.set("qrOverlay", value);
+    },
+
     // setter for selectPointerMove
     setSelectPointerMove: function (value) {
         this.set("selectPointerMove", value);
-    },
-
-    // setter for mapProjection
-    setMapProjection: function (value) {
-        this.set("mapProjection", value);
-    },
-
-    // setter for projections
-    setProjections: function (value) {
-        this.set("projections", value);
     },
 
     // setter for positionMapProjection
@@ -112,14 +126,14 @@ const Model = Tool.extend({
         return this.get("positionMapProjection");
     },
 
-    // setter for updatePosition
-    setUpdatePosition: function (value) {
-        this.set("updatePosition", value);
-    },
     // setter for currentProjection
     setCurrentProjectionName: function (value) {
         this.set("currentProjectionName", value);
-    }
+    },
+    // getter for currentProjection
+    getCurrentProjectionName: function () {
+        return this.get("currentProjectionName");
+    },
 });
 
 export default Model;
