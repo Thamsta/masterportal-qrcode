@@ -38,36 +38,54 @@ const Model = Tool.extend({
     },
 
     createQrLayer: function () {
-        var point = new Feature({
-            geometry: new Point([559885.0267636485, 5930659.540607909]),
-            name: "TestPoint",
+        $.ajax({
+            url: "https://thawing-brushlands-15739.herokuapp.com/postit/all.json",
+            //data: params,
+            async: true,
+            type: "GET",
+            context: this,
+            success: function (data) {
+                var features = [];
+                var pointstyle = new Style({
+                    fill: new Fill({
+                        color: 'rgba(0, 0, 0, 1)'
+                    }),
+                    stroke: new Stroke({
+                        color: '#319FD3',
+                        width: 20
+                    }),
+                    image: new CircleStyle({
+                        radius: 7,
+                        fill: new Fill({
+                            color: 'rgba(0, 0, 0, 1)'
+                        })
+                    })
+                });
+
+                for (var i = 0; i < data.length; i++) {
+                    var object = data[i];
+                    var objectGeometry = object.geometry.coordinates;
+                    var objectTitle = object.properties.titel;
+                    console.log("hier bin ich");
+                    var point = new Feature({
+                        geometry: objectGeometry,
+                    });
+                    console.log(point);
+                    point.setStyle(pointstyle);
+                    features.push(point);
+                }
+                var source = new VectorSource({});
+                var layer = new VectorLayer({
+                    source: source,
+                });
+                console.log(source);
+
+                layer.setVisible(true);
+                Radio.trigger("Map", "addLayer", layer);
+                source.addFeatures(features);
+                console.log(layer.getSource().getFeatures());
+            },
         });
-        var pointstyle = new Style({
-            fill: new Fill({
-                color: 'rgba(0, 0, 0, 1)'
-            }),
-            stroke: new Stroke({
-                color: '#319FD3',
-                width: 20
-            }),
-            image: new CircleStyle({
-                radius: 7,
-                fill: new Fill({
-                    color: 'rgba(0, 0, 0, 1)'
-                })
-            })
-        });
-        point.setStyle(pointstyle);
-        var source = new VectorSource({});
-        var layer = new VectorLayer({
-            source: source,
-        });
-        layer.setVisible(true);
-        Radio.trigger("Map", "addLayer", layer);
-        source.addFeature(point);
-        Radio.trigger("Map", "zoomToExtent", point.getGeometry().getExtent());
-        console.log(source.getFeatures());
-        console.log(layer.getSource().getFeatures());
     },
 
     //Creates Mouse interaction and binds to function
