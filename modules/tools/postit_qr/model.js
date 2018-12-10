@@ -38,36 +38,48 @@ const Model = Tool.extend({
     },
 
     createQrLayer: function () {
-        var point = new Feature({
-            geometry: new Point([559885.0267636485, 5930659.540607909]),
-            name: "TestPoint",
+        $.ajax({
+            url: "https://thawing-brushlands-15739.herokuapp.com/postit/all.json",
+            //data: params,
+            async: true,
+            type: "GET",
+            context: this,
+            success: function (data) {
+                var features = [];
+                var pointstyle = new Style({
+                    image: new CircleStyle({
+                        radius: 7,
+                        fill: new Fill({
+                            color: 'rgba(0, 0, 0, 1)'
+                        })
+                    })
+                });
+
+                for (var i = 0; i < data.length; i++) {
+                    var object = data[i];
+                    var objectGeometry = object.geometry.coordinates;
+                    var objectTitle = object.properties.titel;
+                    var objectInhalt = object.properties.inhalt;
+                    var objectTag = object.properties.tag;
+                    var point = new Feature({
+                        geometry: new Point(objectGeometry),
+                        name: objectTitle,
+                        inhalt: objectInhalt,
+                        tag: objectTag
+                    });
+                    point.setStyle(pointstyle);
+                    features.push(point);
+                }
+                var source = new VectorSource({});
+                var layer = new VectorLayer({
+                    source: source,
+                });
+
+                layer.setVisible(true);
+                Radio.trigger("Map", "addLayer", layer);
+                source.addFeatures(features);
+            },
         });
-        var pointstyle = new Style({
-            fill: new Fill({
-                color: 'rgba(0, 0, 0, 1)'
-            }),
-            stroke: new Stroke({
-                color: '#319FD3',
-                width: 20
-            }),
-            image: new CircleStyle({
-                radius: 7,
-                fill: new Fill({
-                    color: 'rgba(0, 0, 0, 1)'
-                })
-            })
-        });
-        point.setStyle(pointstyle);
-        var source = new VectorSource({});
-        var layer = new VectorLayer({
-            source: source,
-        });
-        layer.setVisible(true);
-        Radio.trigger("Map", "addLayer", layer);
-        source.addFeature(point);
-        Radio.trigger("Map", "zoomToExtent", point.getGeometry().getExtent());
-        console.log(source.getFeatures());
-        console.log(layer.getSource().getFeatures());
     },
 
     //Creates Mouse interaction and binds to function
@@ -91,8 +103,8 @@ const Model = Tool.extend({
     positionClicked: function (position) {
         var that = this;
         var coord = this.getCartesian(position).split(", ");
-        var easting = coord[0];
-        var northing = coord[1];
+        var easting = coord[1];
+        var northing = coord[0];
         var QRCode = require("qrcode");
         var text = "https://thawing-brushlands-15739.herokuapp.com/new.html?northing=" + northing + "&easting=" + easting;
         var opts = {
