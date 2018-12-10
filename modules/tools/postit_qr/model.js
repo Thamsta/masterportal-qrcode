@@ -47,13 +47,6 @@ const Model = Tool.extend({
             success: function (data) {
                 var features = [];
                 var pointstyle = new Style({
-                    fill: new Fill({
-                        color: 'rgba(0, 0, 0, 1)'
-                    }),
-                    stroke: new Stroke({
-                        color: '#319FD3',
-                        width: 20
-                    }),
                     image: new CircleStyle({
                         radius: 7,
                         fill: new Fill({
@@ -66,11 +59,14 @@ const Model = Tool.extend({
                     var object = data[i];
                     var objectGeometry = object.geometry.coordinates;
                     var objectTitle = object.properties.titel;
-                    console.log("hier bin ich");
+                    var objectInhalt = object.properties.inhalt;
+                    var objectTag = object.properties.tag;
                     var point = new Feature({
-                        geometry: objectGeometry,
+                        geometry: new Point(objectGeometry),
+                        name: objectTitle,
+                        inhalt: objectInhalt,
+                        tag: objectTag
                     });
-                    console.log(point);
                     point.setStyle(pointstyle);
                     features.push(point);
                 }
@@ -78,12 +74,10 @@ const Model = Tool.extend({
                 var layer = new VectorLayer({
                     source: source,
                 });
-                console.log(source);
 
                 layer.setVisible(true);
                 Radio.trigger("Map", "addLayer", layer);
                 source.addFeatures(features);
-                console.log(layer.getSource().getFeatures());
             },
         });
     },
@@ -109,8 +103,8 @@ const Model = Tool.extend({
     positionClicked: function (position) {
         var that = this;
         var coord = this.getCartesian(position).split(", ");
-        var easting = coord[0];
-        var northing = coord[1];
+        var easting = coord[1];
+        var northing = coord[0];
         var QRCode = require("qrcode");
         var text = "https://thawing-brushlands-15739.herokuapp.com/new.html?northing=" + northing + "&easting=" + easting;
         var opts = {
