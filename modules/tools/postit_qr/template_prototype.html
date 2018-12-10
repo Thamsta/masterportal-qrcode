@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<h2>Tabs</h2>
+<p>Click on the buttons inside the tabbed menu:</p>
+
+<div class="tab">
+  <button class="tablinks" id="listPostitsButton">Alle Postits</button>
+  <button class="tablinks" id="newPostitButton">Neuen Postit hinzufügen</button>
+</div>
+
+<div id="listPostits" class="tabcontent">
+  <p>Hier werden alle gespeicherten Postits angezeigt.</p>
+  <button type="button" id="deleteButton" >Löschen</button>
+  <button type="button" id="editButton">Editieren</button>
+</div>
+
+<div id="newPostit" class="tabcontent">
+  <div class="form-group">
+          <label id="QRplaceHolderLabel" for="QRplaceHolder" class="col-md-5 col-sm-5 control-label">Klicken Sie auf die Karte</label>
+          <canvas id="QRplaceHolder">Canvas</canvas>
+  </div>
+</div>
+
+</body>
+</html>

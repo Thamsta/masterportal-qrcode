@@ -2,7 +2,11 @@ import Tool from "../../core/modelList/tool/model";
 import { Pointer } from "ol/interaction.js";
 import { toStringHDMS, toStringXY } from "ol/coordinate.js";
 import Overlay from "ol/Overlay.js";
-
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from 'ol/source/Vector.js';
+import Point from "ol/geom/Point.js";
+import Feature from "ol/Feature.js";
+import { Circle as CircleStyle, Style, Fill, Stroke } from "ol/style.js";
 
 const Model = Tool.extend({
     defaults: _.extend({}, Tool.prototype.defaults, {
@@ -31,6 +35,39 @@ const Model = Tool.extend({
                 Radio.trigger("MapMarker", "hideMarker");
             },
         });
+    },
+
+    createQrLayer: function () {
+        var point = new Feature({
+            geometry: new Point([559885.0267636485, 5930659.540607909]),
+            name: "TestPoint",
+        });
+        var pointstyle = new Style({
+            fill: new Fill({
+                color: 'rgba(0, 0, 0, 1)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 20
+            }),
+            image: new CircleStyle({
+                radius: 7,
+                fill: new Fill({
+                    color: 'rgba(0, 0, 0, 1)'
+                })
+            })
+        });
+        point.setStyle(pointstyle);
+        var source = new VectorSource({});
+        var layer = new VectorLayer({
+            source: source,
+        });
+        layer.setVisible(true);
+        Radio.trigger("Map", "addLayer", layer);
+        source.addFeature(point);
+        Radio.trigger("Map", "zoomToExtent", point.getGeometry().getExtent());
+        console.log(source.getFeatures());
+        console.log(layer.getSource().getFeatures());
     },
 
     //Creates Mouse interaction and binds to function

@@ -28,6 +28,7 @@ const PostItQRView = Backbone.View.extend({
             this.$el.html(this.template(model.toJSON()));
             this.delegateEvents();
             this.model.createInteraction();
+            this.model.createQrLayer();
             document.getElementById("popup-content").style.visibility = "hidden";
         }
         else {
