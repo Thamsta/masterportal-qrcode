@@ -24,6 +24,7 @@ const Model = Tool.extend({
                 duration: 250
             },
         }),
+        postitLayer: undefined,
         // qrArray: [],
 
 
@@ -35,6 +36,12 @@ const Model = Tool.extend({
                 Radio.trigger("MapMarker", "hideMarker");
             },
         });
+    },
+
+    refreshLayer: function (layer) {
+        console.log(self.layer);
+        console.log(self.layer);
+        console.log(self.layer);
     },
 
     createQrLayer: function () {
@@ -57,15 +64,11 @@ const Model = Tool.extend({
 
                 for (var i = 0; i < data.length; i++) {
                     var object = data[i];
-                    var objectGeometry = object.geometry.coordinates;
-                    var objectTitle = object.properties.titel;
-                    var objectInhalt = object.properties.inhalt;
-                    var objectTag = object.properties.tag;
                     var point = new Feature({
-                        geometry: new Point(objectGeometry),
-                        name: objectTitle,
-                        inhalt: objectInhalt,
-                        tag: objectTag
+                        geometry: new Point(object.coords),
+                        name: object.title,
+                        inhalt: object.content,
+                        tag: object.tag
                     });
                     point.setStyle(pointstyle);
                     features.push(point);
@@ -74,10 +77,15 @@ const Model = Tool.extend({
                 var layer = new VectorLayer({
                     source: source,
                 });
-
+                this.set("postitLayer", layer);
                 layer.setVisible(true);
-                Radio.trigger("Map", "addLayer", layer);
+                Radio.trigger("Map", "addLayer", this.get("postitLayer"));
                 source.addFeatures(features);
+                setInterval((function(self){
+                    return function(){
+                        self.refreshLayer(self.layer);
+                    }
+                })(this), 1000);
             },
         });
     },
@@ -102,6 +110,7 @@ const Model = Tool.extend({
     //Triggered by mouse interaction (click)
     positionClicked: function (position) {
         var that = this;
+        console.log(that.get("postitLayer"));
         var coord = this.getCartesian(position).split(", ");
         var easting = coord[1];
         var northing = coord[0];
