@@ -4,10 +4,12 @@ const TrinkwasserTheme = Theme.extend({
 
     initialize: function () {
         this.listenTo(this, {
-            "change:isReady": this.splitContent
+            "change:isReady": this.splitContent,
+            "change:isVisible": this.testMethode,
         });
     },
     splitContent: function () {
+        console.log("trinkwasser 1");
         var allgemContent = {},
             mikrobioContent = {},
             chemContent = {};
@@ -29,6 +31,10 @@ const TrinkwasserTheme = Theme.extend({
 
             this.set("gfiContent", {"allgemContent": allgemContent, "mikrobioContent": mikrobioContent, "chemContent": chemContent});
         }
+    },
+    testMethode: function (){
+        console.log("trinkwasser 2");
+
     }
 });
 

@@ -1,12 +1,53 @@
 <!DOCTYPE html>
-<div class="btn-group">
+<!-- <div class="btn-group">
     <button type="button" id="deletePostitsButton" class="btn btn-panel-submit">Zurücksetzen</button>
-</div>
-<div id="popup">
-    <div id="popup-content" class="ol-popup">
-        <div id="QRplaceHolderLabel">
-            Klicken Sie auf die Karte
+</div> -->
+<div class="btn-group">
+    <!-- <button type="button" id="showPostItsButton" class="btn btn-panel-submit">Anzeigen/Ausblenden PostIts</button>
+    <button type="button" id="showCreateButton" class="btn btn-panel-submit">Anzeigen/Ausblenden Bearbeiten</button> -->
+    <div>
+        Neue Anmerkungen setzen
+    </div>
+    <label class=switch>
+        <input type="checkbox" id="toggleCreate" checked="true">
+        <span class="slider round"></span>
+    </label><br><br>
+    <div>
+        Anmerkungen auf Karte anzeigen
+    </div>
+    <label class=switch>
+        <input type="checkbox" id="toggleView" unchecked="true">
+        <span class="slider"></span>
+    </label>
+
+    <div id="qr_popup" class="ol-popup">
+        <div id="qr_popup_content">
+            <!-- <a href="#" id="qr_popup_closer" class="ol-popup-closer"></a> -->
+            <div id="QRplaceHolderLabel">
+                Scannen Sie den QR-Code mit Ihrem Endgerät.
+            </div>
+            <img id="image"></img>
         </div>
-        <img id="image"></img>
+    </div>
+
+    <div id="select_popup" class="ol-popup">
+        <!-- <a href="#" id="select_popup_closer" class="ol-popup-closer"></a> -->
+        <div id="select_popup_content">
+            <div>
+                <strong>Titel</strong>
+            </div>
+            <div id="titel_content"></div>
+            <br> <br>
+            <div>
+                <strong>Kategorie</strong>
+            </div>
+            <div id="kategorie_content"></div>
+            <br> <br>
+            <div>
+                <strong>Beschreibung</strong>
+            </div>
+            <div id="inhalt_content"></div>
+
+        </div>
     </div>
 </div>

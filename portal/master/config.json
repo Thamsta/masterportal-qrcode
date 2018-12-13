@@ -430,8 +430,8 @@
       "Layer": [
         {
           "id": "2001777",
-          "gfiTheme": "trinkwasser",
-          "featureCount": 5         
+          "gfiTheme": "qr-code",
+          "featureCount": 5
         },
         {
           "id": "3302",
@@ -511,7 +511,6 @@
         {
           "id": "4479"
         },
-        
         {
           "id": "2407",
           "infoFormat": "text/html"
@@ -552,7 +551,6 @@
           "extendedFilter": true,
           "autoRefresh": 6000
         },
-        
         {
           "id": "753",
           "styleId": "753",

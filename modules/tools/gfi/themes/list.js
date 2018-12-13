@@ -9,6 +9,8 @@ import SolaratlasThemeView from "./solaratlas/view";
 import SolaratlasTheme from "./solaratlas/model";
 import TrinkwasserThemeView from "./trinkwasser/view";
 import TrinkwasserTheme from "./trinkwasser/model";
+import QrCodeThemeView from "./qrCode/view";
+import QrCodeTheme from "./qrCode/model";
 import MietenspiegelThemeView from "./mietenspiegel/view";
 import MietenspiegelTheme from "./mietenspiegel/model";
 import SgvOnlineTheme from "./sgvonline/model";
@@ -53,7 +55,9 @@ const ThemeList = Backbone.Collection.extend({
             theme = new TrinkwasserTheme(attrs, options);
         }
         else if (attrs.gfiTheme === "qr-code") {
-            theme = new TrinkwasserTheme(attrs, options);
+            theme = new QrCodeTheme(attrs, options);
+            console.log(theme);
+            console.log("Theme erzeugt");
         }
         else if (attrs.gfiTheme === "mietenspiegel") {
             theme = new MietenspiegelTheme(attrs, options);
@@ -144,7 +148,7 @@ const ThemeList = Backbone.Collection.extend({
                 break;
             }
             case "qr-code": {
-                new TrinkwasserThemeView({model: model});
+                new QrCodeThemeView({model: model});
                 break;
             }
             case "mietenspiegel": {
