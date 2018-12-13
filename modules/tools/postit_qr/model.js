@@ -61,13 +61,11 @@ const Model = Tool.extend({
         )
     },
 
-    refreshLayer: function (layer) {
-        console.log(self.layer);
-        console.log(self.layer);
-        console.log(self.layer);
+    refreshLayer: function () {
+        console.log(this.getPostitLayer());
     },
 
-    createQrLayer: function () {
+    createPostitLayer: function () {
         var that = this;
         $.ajax({
             url: "https://thawing-brushlands-15739.herokuapp.com/postit/all.json",
@@ -84,6 +82,7 @@ const Model = Tool.extend({
                         })
                     })
                 });
+
                 for (var i = 0; i < data.length; i++) {
                     var object = data[i];
                     var point = new Feature({
@@ -95,28 +94,33 @@ const Model = Tool.extend({
                     point.setStyle(pointstyle);
                     that.getPostitFeatures().push(point);
                 }
+
                 var source = new VectorSource({});
                 source.addFeatures(that.getPostitFeatures());
                 var layer = new VectorLayer({
                     source: source,
                 });
+
                 layer.setVisible(false);
                 this.setPostitLayer(layer);
                 Radio.trigger("Map", "addLayer", this.getPostitLayer());
-                source.addFeatures(features);
+
+
                 setInterval((function(self){
                     return function(){
-                        self.refreshLayer(self.layer);
+                        self.refreshLayer();
                     }
                 })(this), 1000);
             },
         });
     },
-    removeQrLayer: function () {
+    removePostitLayer: function () {
         this.getPostitLayer().setVisible(false);
+        //TODO: Stop setInterval function
+
     },
 
-    toggleQrLayer: function () {
+    togglePostitLayer: function () {
         if (this.getPostitLayer().getVisible() === true) {
             this.getPostitLayer().setVisible(false);
             this.removeSelectInteraction();

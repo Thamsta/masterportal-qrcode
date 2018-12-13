@@ -32,7 +32,7 @@ const PostItQRView = Backbone.View.extend({
             $('#select_popup')[0].style.visibility = "hidden";
 
             this.delegateEvents();
-            this.model.createQrLayer();
+            this.model.createPostitLayer();
             this.model.createInteraction();
             if (this.model.get("view")){
                 this.model.createSelectInteraction();
@@ -43,7 +43,7 @@ const PostItQRView = Backbone.View.extend({
             this.hidePostItSelect();
             this.model.removeSelectInteraction();
             this.model.removeInteraction();
-            this.model.removeQrLayer();
+            this.model.removePostitLayer();
             this.undelegateEvents();
         }
     },
@@ -100,7 +100,7 @@ const PostItQRView = Backbone.View.extend({
             this.model.createSelectInteraction();
             this.model.set("view", true);
         }
-        this.model.toggleQrLayer();
+        this.model.togglePostitLayer();
     },
     toggleCreatePostItQR: function () {
         if (this.model.get("edit")) {
