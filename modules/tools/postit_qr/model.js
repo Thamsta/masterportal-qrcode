@@ -6,7 +6,7 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from 'ol/source/Vector.js';
 import Point from "ol/geom/Point.js";
 import Feature from "ol/Feature.js";
-import { Circle as CircleStyle, Style, Fill } from "ol/style.js";
+import { Circle as CircleStyle, Style, Fill, Stroke } from "ol/style.js";
 import Select from 'ol/interaction/Select.js';
 import click from 'ol/events/condition.js';
 
@@ -19,7 +19,7 @@ const Model = Tool.extend({
         qrBild: undefined,
         qrOverlay: undefined,
         postitLayer: undefined,
-        postitFeatures: [],
+        postitFeatures: [], //TODO: delete
         edit: true,
         view: false,
         selectOverlay: undefined,
@@ -69,37 +69,84 @@ const Model = Tool.extend({
             type: "GET",
             context: this,
             success: function (data) {
-                //TODO: replace with dynamic point style
-                var pointstyle = new Style({
-                    image: new CircleStyle({
-                        radius: 7,
-                        fill: new Fill({
-                            color: 'rgba(0, 0, 0, 1)'
-                        })
-                    })
-                });
-                
-                
-                this.updateFeatures(data, pointstyle);
-                
+                this.updateFeatures(data);
+
                 var source = new VectorSource({});
                 source.addFeatures(that.getPostitFeatures());
                 var layer = new VectorLayer({
                     source: source,
                 });
-                
+
                 layer.setVisible(false);
                 this.setPostitLayer(layer);
                 Radio.trigger("Map", "addLayer", this.getPostitLayer());
 
-                setInterval((function(self){
-                    return function(){
+                setInterval((function (self) {
+                    return function () {
                         self.refreshLayer();
                     }
                 })(this), 1000);
             },
         });
     },
+
+    /**
+     * Creates a style for a point based on it's tag
+     * @param {Tag of the style} tag 
+     */
+    createPointStyle: function (tag) {
+        switch (tag) {
+            case "Verkehr":
+                var thecolor = 'rgba(50, 50, 50, 1)';
+                break;
+            case "Soziales":
+                var thecolor = 'rgba(255, 255, 0, 1)'
+                break;
+            case "Parkplätze":
+                var thecolor = 'rgba(0, 0, 255, 1)'
+                break;
+            case "Radwege":
+                var thecolor = 'rgba(255, 0, 0, 1)'
+                break;
+            case "Fußwege":
+                var thecolor = 'rgba(50, 50, 50, 1)'
+                break;
+            case "Natur":
+                var thecolor = 'rgba(0, 255, 255, 1)'
+                break;
+            case "HVV":
+                var thecolor = 'rgba(255, 150, 0, 1)'
+                break;
+            case "Schulen":
+                var thecolor = 'rgba(100, 255, 255, 1)'
+                break;
+            case "Kindertagesstätten":
+                var thecolor = 'rgba(100, 255, 100, 1)'
+                break;
+            case "Sonstiges":
+                var thecolor = 'rgba(255, 0, 255, 1)'
+                break;
+            default:
+                var thecolor = 'white'
+                break;
+        }
+
+
+        var pointstyle = new Style({
+            image: new CircleStyle({
+                radius: 7,
+                fill: new Fill({
+                    color: thecolor
+                }),
+                stroke: new Stroke({
+                    color: 'white'
+                })
+            })
+        });
+
+        return pointstyle;
+    },
+
 
     /**
      * Called by setInterval
@@ -112,16 +159,7 @@ const Model = Tool.extend({
             type: "GET",
             context: this,
             success: function (data) {
-                //TODO: replace with dynamic point style
-                var pointstyle = new Style({
-                    image: new CircleStyle({
-                        radius: 7,
-                        fill: new Fill({
-                            color: 'rgba(0, 0, 0, 1)'
-                        })
-                    })
-                });
-                this.updateFeatures(data,pointstyle);
+                this.updateFeatures(data);
             }
         })
     },
@@ -132,19 +170,19 @@ const Model = Tool.extend({
      * @param {JSON} data Post-It data from Server: JSON Array of Postits with title, content, tags and coords
      * @param {Style} pointstyle The Pointstyle with which the data will be displayed on the map
      */
-    updateFeatures(data, pointstyle) {
-        if(this.getPostitLayer()){
-        for (var i = 0; i < data.length; i++) {
-            var object = data[i];
-            var point = new Feature({
-                geometry: new Point(object.coords),
-                name: object.title,
-                inhalt: object.content,
-                tag: object.tags
-            });
-            point.setStyle(pointstyle);
-            this.getPostitFeatures().push(point);
-        }
+    updateFeatures(data) {
+        if (this.getPostitLayer()) {
+            for (var i = 0; i < data.length; i++) {
+                var object = data[i];
+                var point = new Feature({
+                    geometry: new Point(object.coords),
+                    name: object.title,
+                    inhalt: object.content,
+                    tag: object.tags
+                });
+                point.setStyle(this.createPointStyle(object.tags));
+                this.getPostitFeatures().push(point);
+            }
             //TODO: index einfuehren für mehr effizienz!
             this.getPostitLayer().getSource().clear();
             this.getPostitLayer().getSource().addFeatures(this.getPostitFeatures());
