@@ -102,6 +102,7 @@ const PostItQRView = Backbone.View.extend({
         }
         this.model.togglePostitLayer();
     },
+    
     toggleCreatePostItQR: function () {
         if (this.model.get("edit")) {
             this.model.removeInteraction();

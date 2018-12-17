@@ -19,7 +19,7 @@ const Model = Tool.extend({
         qrBild: undefined,
         qrOverlay: undefined,
         postitLayer: undefined,
-        postitFeatures: undefined,
+        postitFeatures: [],
         edit: true,
         view: false,
         selectOverlay: undefined,
@@ -61,10 +61,6 @@ const Model = Tool.extend({
         )
     },
 
-    refreshLayer: function () {
-        console.log(this.getPostitLayer());
-    },
-
     createPostitLayer: function () {
         var that = this;
         $.ajax({
@@ -73,7 +69,7 @@ const Model = Tool.extend({
             type: "GET",
             context: this,
             success: function (data) {
-                that.setPostitFeatures([]);
+                //TODO: replace with dynamic point style
                 var pointstyle = new Style({
                     image: new CircleStyle({
                         radius: 7,
@@ -82,29 +78,19 @@ const Model = Tool.extend({
                         })
                     })
                 });
-
-                for (var i = 0; i < data.length; i++) {
-                    var object = data[i];
-                    var point = new Feature({
-                        geometry: new Point(object.coords),
-                        name: object.title,
-                        inhalt: object.content,
-                        tag: object.tags
-                    });
-                    point.setStyle(pointstyle);
-                    that.getPostitFeatures().push(point);
-                }
-
+                
+                
+                this.updateFeatures(data, pointstyle);
+                
                 var source = new VectorSource({});
                 source.addFeatures(that.getPostitFeatures());
                 var layer = new VectorLayer({
                     source: source,
                 });
-
+                
                 layer.setVisible(false);
                 this.setPostitLayer(layer);
                 Radio.trigger("Map", "addLayer", this.getPostitLayer());
-
 
                 setInterval((function(self){
                     return function(){
@@ -114,6 +100,57 @@ const Model = Tool.extend({
             },
         });
     },
+
+    /**
+     * Called by setInterval
+     * Fetches all postits from the server and calls updateFeatures with the data
+     */
+    refreshLayer: function () {
+        $.ajax({
+            url: "https://thawing-brushlands-15739.herokuapp.com/postit/all.json",
+            async: true,
+            type: "GET",
+            context: this,
+            success: function (data) {
+                //TODO: replace with dynamic point style
+                var pointstyle = new Style({
+                    image: new CircleStyle({
+                        radius: 7,
+                        fill: new Fill({
+                            color: 'rgba(0, 0, 0, 1)'
+                        })
+                    })
+                });
+                this.updateFeatures(data,pointstyle);
+            }
+        })
+    },
+
+    /**
+     * Refreshes the Features by deleting all and loading
+     * 
+     * @param {JSON} data Post-It data from Server: JSON Array of Postits with title, content, tags and coords
+     * @param {Style} pointstyle The Pointstyle with which the data will be displayed on the map
+     */
+    updateFeatures(data, pointstyle) {
+        if(this.getPostitLayer()){
+        for (var i = 0; i < data.length; i++) {
+            var object = data[i];
+            var point = new Feature({
+                geometry: new Point(object.coords),
+                name: object.title,
+                inhalt: object.content,
+                tag: object.tags
+            });
+            point.setStyle(pointstyle);
+            this.getPostitFeatures().push(point);
+        }
+            //TODO: index einfuehren für mehr effizienz!
+            this.getPostitLayer().getSource().clear();
+            this.getPostitLayer().getSource().addFeatures(this.getPostitFeatures());
+        }
+    },
+
     removePostitLayer: function () {
         this.getPostitLayer().setVisible(false);
         //TODO: Stop setInterval function
